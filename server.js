@@ -1134,12 +1134,11 @@ app.post("/api/ai/predict", async (req, res) => {
     const currentFile = fileURLToPath(import.meta.url);
     const projectRoot = path.dirname(currentFile);
 
-    const pythonPath = path.join(
-      projectRoot,
-      ".venv",
-      "Scripts",
-      "python.exe"
-    );
+   const pythonPath =
+  process.env.PYTHON_PATH ||
+  (process.platform === "win32"
+    ? path.join(projectRoot, ".venv", "Scripts", "python.exe")
+    : "python3");
 
     const scriptPath = path.join(
       projectRoot,
@@ -1162,10 +1161,18 @@ app.post("/api/ai/predict", async (req, res) => {
     let finished = false;
 
     const timeout = setTimeout(() => {
-      if (!finished) {
-        child.kill();
-      }
-    }, 15000);
+  if (finished) return;
+
+  finished = true;
+  child.kill();
+
+  if (!res.headersSent) {
+    res.status(504).json({
+      success: false,
+      message: "Prediction service timed out.",
+    });
+  }
+}, 15000);
 
     child.stdout.on("data", (chunk) => {
       stdout += chunk.toString();
