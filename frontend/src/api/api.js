@@ -76,25 +76,21 @@ export function importFeedbackCsv(file) {
 
 
 export async function getAnalysis() {
-    const BASE_URL =
-        import.meta.env.VITE_API_BASE_URL ||
-        "http://localhost:5000/api";
+  const response = await fetch(`${API_BASE_URL}/analysis`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  });
 
-    const response = await fetch(`${BASE_URL}/analysis`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
-    });
+  if (!response.ok) {
+    throw new Error(
+      `Analysis failed: ${response.status} ${response.statusText}`
+    );
+  }
 
-    if (!response.ok) {
-        throw new Error(
-            `Analysis failed: ${response.status} ${response.statusText}`
-        );
-    }
-
-    return response.json();
+  return response.json();
 }
 
 
