@@ -1,0 +1,34 @@
+# Secrets and environment variables
+.env
+.env.*
+!.env.example
+
+# Node.js dependencies
+node_modules/
+frontend/node_modules/
+
+# Python virtual environments and caches
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# SQLite database and temporary journal files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Build output
+frontend/dist/
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
